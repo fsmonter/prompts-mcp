@@ -16,7 +16,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Bind FabricPatternService
         $this->app->singleton(FabricPatternService::class, function ($app) {
             return new FabricPatternService(
                 $app->make(HttpClient::class),
@@ -30,7 +29,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Register the Fabric patterns toolkit with Laravel Loop
         Loop::toolkit(
             new FabricPatternsToolkit(
                 $this->app->make(FabricPatternService::class)

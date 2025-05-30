@@ -11,7 +11,7 @@
     "require": {
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.8",
-        "kirschbaum-development/laravel-loop": "^0.1.1",
+        "kirschbaum-development/laravel-loop": "@dev",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "league/commonmark": "^2.5",
@@ -78,6 +78,15 @@
             "php-http/discovery": true
         }
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "~/kdg/laravel-loop",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true
 }

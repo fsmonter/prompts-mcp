@@ -24,7 +24,6 @@ class FabricPatternsToolkit implements Toolkit
         $tools = new ToolCollection;
 
         try {
-            // Get all active patterns - handle gracefully if tables don't exist
             $patterns = FabricPattern::active()->get();
 
             foreach ($patterns as $pattern) {
@@ -63,7 +62,6 @@ class FabricPatternsToolkit implements Toolkit
                 required: false
             )
             ->using(function (string $input_content = '', string $additional_context = '') use ($pattern) {
-                // Combine input content with additional context
                 $fullInput = trim($input_content);
                 if (! empty($additional_context)) {
                     $fullInput .= ! empty($fullInput) ? "\n\nAdditional context: ".$additional_context : $additional_context;

@@ -10,6 +10,7 @@ return [
     | provided by the Laravel Loop package.
     |
     */
+    'debug' => env('LOOP_DEBUG', true),
     'streamable_http' => [
         /*
         |--------------------------------------------------------------------------
@@ -84,7 +85,7 @@ return [
         | WARNING: DO NOT LEAVE THIS ENDPOINT ENABLED AND UNPROTECTED IN PRODUCTION.
         |
         */
-        'middleware' => ['auth:sanctum'],
+        'middleware' => [],
 
         /*
         |--------------------------------------------------------------------------
