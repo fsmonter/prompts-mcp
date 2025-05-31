@@ -86,34 +86,45 @@ DB_CONNECTION=sqlite
 
 ### Available MCP Tools
 
-Once configured, your AI client will have access to:
+Once configured, your AI client will have access to these streamlined tools:
 
-#### Pattern Execution Tools
+#### Core Execution Tool
 
-* `fabric_{pattern_name}` - Execute any Fabric pattern (200+ tools)
-  * Parameters: `input_content`, `additional_context`
+* `fabric_execute_pattern` - Execute any Fabric pattern by name
+  * Parameters: `pattern_name` (required), `input_content`, `additional_context`
 
-#### Discovery Tools
+#### Discovery and Browsing Tools
 
-* `fabric_list_patterns_by_category` - List patterns by category
 * `fabric_search_patterns` - Search patterns by keyword
+  * Parameters: `query` (required), `limit` (optional)
+* `fabric_list_patterns_by_category` - Browse patterns by category
+  * Parameters: `category` (optional)
+* `fabric_list_all_patterns` - Get complete pattern list
+  * Parameters: `format` (optional: "compact" or "detailed")
 * `fabric_get_pattern_details` - Get detailed pattern information
+  * Parameters: `pattern_name` (required)
 
 ### Example Usage in Claude Desktop
 
-1. **Execute a pattern**:
+1. **Find and execute a pattern**:
    ```
-   Use the fabric_analyze_claims tool to analyze this article: [paste content]
-   ```
-
-2. **Discover patterns**:
-   ```
-   Search for patterns related to "writing"
+   Search for patterns related to "analysis"
+   Then use fabric_execute_pattern with pattern_name "analyze_claims" and this article: [paste content]
    ```
 
-3. **Browse by category**:
+2. **Browse patterns by category**:
    ```
-   Show me all patterns in the "analysis" category
+   Show me all patterns in the "writing" category
+   ```
+
+3. **Get pattern details**:
+   ```
+   Get details for the pattern "create_summary"
+   ```
+
+4. **Quick execution**:
+   ```
+   Execute the analyze_claims pattern on this text: [content]
    ```
 
 ### Connecting to Claude Desktop
@@ -274,54 +285,3 @@ Check application logs:
 ```bash
 php artisan pail
 ```
-
-## Security
-
-### Authentication
-
-For production deployments, configure authentication middleware in `config/loop.php`:
-
-```php
-'sse' => [
-    'middleware' => ['auth:sanctum'],
-],
-```
-
-### Rate Limiting
-
-Consider implementing rate limiting for public endpoints to prevent abuse.
-
-## Performance
-
-### Caching
-
-* Pattern sync results are cached for 1 hour
-* Database queries are optimized with proper indexing
-* Large pattern content is stored efficiently
-
-### Scaling
-
-For high-volume usage:
-
-* Use Redis for caching and sessions
-* Configure database connection pooling
-* Consider read replicas for pattern data
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Run tests: `php artisan test`
-4. Submit a pull request
-
-## License
-
-MIT License - see [LICENSE](LICENSE) for details.
-
-## Related Projects
-
-* [Fabric](https://github.com/danielmiessler/fabric) - The original AI pattern framework
-* [Laravel Loop](https://github.com/kirschbaum-development/laravel-loop) - Laravel MCP server implementation
-* [Model Context Protocol](https://modelcontextprotocol.io/) - The open standard for AI-application integration
-
-***
