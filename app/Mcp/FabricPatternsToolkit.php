@@ -44,7 +44,7 @@ class FabricPatternsToolkit implements Toolkit
     {
         return CustomTool::make(
             name: 'fabric_execute_pattern',
-            description: 'Execute any Fabric pattern by name. Use fabric_search_patterns or fabric_list_patterns_by_category to discover available patterns.',
+            description: 'Generates a Fabric analysis prompt by combining a pattern with input content. CRITICAL: Take the returned prompt and execute it as your system prompt to analyze the input content. Return the AI analysis, not the prompt text. This tool returns the prompt - you must execute it to provide the actual analysis.',
         )
             ->withStringParameter(
                 name: 'pattern_name',
@@ -78,7 +78,7 @@ class FabricPatternsToolkit implements Toolkit
                     $fullInput .= ! empty($fullInput) ? "\n\nAdditional context: ".$additional_context : $additional_context;
                 }
 
-                return $this->patternService->executePattern(
+                $combinedPrompt = $this->patternService->executePattern(
                     pattern: $pattern,
                     inputContent: $fullInput,
                     metadata: [
@@ -88,6 +88,11 @@ class FabricPatternsToolkit implements Toolkit
                         'has_additional_context' => ! empty($additional_context),
                     ]
                 );
+
+                // Add clear instruction for the agent
+                $instruction = "EXECUTE THIS PROMPT: Use the following as your system prompt to analyze the provided content. Do not return this prompt text - execute it and return the analysis.\n\n";
+
+                return $instruction.$combinedPrompt;
             });
     }
 

@@ -49,7 +49,7 @@ class FabricPatternsTest extends TestCase
         $service = app(FabricPatternService::class);
         $result = $service->executePattern($pattern, 'Hello World');
 
-        $this->assertStringContains('Process this input: Hello World', $result);
+        $this->assertStringContainsString('Process this input: Hello World', $result);
 
         // Verify execution was logged
         $this->assertDatabaseHas('pattern_executions', [
@@ -62,32 +62,32 @@ class FabricPatternsTest extends TestCase
     public function it_can_search_patterns()
     {
         FabricPattern::create([
-            'name' => 'analyze_data',
-            'title' => 'Analyze Data',
-            'description' => 'Analyzes data patterns',
-            'content' => 'Analyze the following data',
+            'name' => 'analyze_test',
+            'title' => 'Analyze Test Pattern',
+            'description' => 'This pattern analyzes test data',
+            'content' => 'Analyze this: {{INPUT}}',
             'category' => 'analysis',
         ]);
 
         FabricPattern::create([
-            'name' => 'write_essay',
-            'title' => 'Write Essay',
-            'description' => 'Writes academic essays',
-            'content' => 'Write an essay about',
+            'name' => 'write_report',
+            'title' => 'Write Report Pattern',
+            'description' => 'This pattern writes reports',
+            'content' => 'Write a report about: {{INPUT}}',
             'category' => 'writing',
         ]);
 
         $service = app(FabricPatternService::class);
 
-        // Test search by keyword
-        $results = $service->searchPatterns('data');
+        // Search by name
+        $results = $service->searchPatterns('analyze');
         $this->assertCount(1, $results);
-        $this->assertEquals('analyze_data', $results->first()->name);
+        $this->assertEquals('analyze_test', $results->first()->name);
 
-        // Test category filtering
-        $analysisPatterns = $service->getPatternsByCategory('analysis');
-        $this->assertCount(1, $analysisPatterns);
-        $this->assertEquals('analyze_data', $analysisPatterns->first()->name);
+        // Search by category
+        $writingPatterns = $service->getPatternsByCategory('writing');
+        $this->assertCount(1, $writingPatterns);
+        $this->assertEquals('write_report', $writingPatterns->first()->name);
     }
 
     /** @test */
@@ -128,7 +128,7 @@ class FabricPatternsTest extends TestCase
         $service = app(FabricPatternService::class);
         $result = $service->executePattern($pattern, 'test data');
 
-        $this->assertStringContains('Analyze: test data', $result);
+        $this->assertStringContainsString('Analyze: test data', $result);
     }
 
     /** @test */
@@ -158,5 +158,43 @@ class FabricPatternsTest extends TestCase
         // Test category scope
         $testingPatterns = FabricPattern::category('testing')->get();
         $this->assertCount(2, $testingPatterns);
+    }
+
+    /** @test */
+    public function it_can_extract_pattern_name_from_path()
+    {
+        $service = app(FabricPatternService::class);
+
+        // Use reflection to test private method
+        $reflection = new \ReflectionClass($service);
+        $method = $reflection->getMethod('extractPatternNameFromPath');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($service, 'patterns/analyze_claims/system.md');
+        $this->assertEquals('analyze_claims', $result);
+
+        $result = $method->invoke($service, 'patterns/create_summary/system.md');
+        $this->assertEquals('create_summary', $result);
+    }
+
+    /** @test */
+    public function it_can_process_pattern_data()
+    {
+        $service = app(FabricPatternService::class);
+
+        // Use reflection to test private method
+        $reflection = new \ReflectionClass($service);
+        $method = $reflection->getMethod('processPatternData');
+        $method->setAccessible(true);
+
+        $content = "---\ntitle: Test Pattern\ncategory: testing\n---\n\nThis is a test pattern content.";
+
+        $result = $method->invoke($service, 'test_pattern', $content);
+
+        $this->assertEquals('test_pattern', $result['name']);
+        $this->assertEquals('Test Pattern', $result['title']);
+        $this->assertEquals('testing', $result['category']);
+        $this->assertStringContainsString('This is a test pattern content.', $result['content']);
+        $this->assertEquals(['title' => 'Test Pattern', 'category' => 'testing'], $result['metadata']);
     }
 }

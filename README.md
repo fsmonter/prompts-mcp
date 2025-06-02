@@ -74,12 +74,8 @@ This will guide you through setting up:
 The following environment variables control MCP server behavior:
 
 ```env
-# Enable MCP transports
+# Enable MCP transport
 LOOP_SSE_ENABLED=true
-LOOP_STREAMABLE_HTTP_ENABLED=true
-
-# Database (SQLite is default)
-DB_CONNECTION=sqlite
 ```
 
 ## Usage
@@ -126,6 +122,7 @@ Once configured, your AI client will have access to these streamlined tools:
    ```
    Execute the analyze_claims pattern on this text: [content]
    ```
+See more examples using cursor in [./docs/cursor-examples](./docs/cursor-examples)
 
 ### Connecting to Claude Desktop
 
@@ -200,23 +197,6 @@ php artisan loop:mcp:start
 php artisan loop:mcp:start --debug
 ```
 
-## Development
-
-### Project Structure
-
-```
-app/
-├── Mcp/
-│   └── FabricPatternsToolkit.php     # MCP tool definitions
-├── Models/
-│   ├── FabricPattern.php             # Pattern model
-│   └── PatternExecution.php          # Execution tracking
-├── Services/
-│   └── FabricPatternService.php      # Pattern management logic
-└── Console/Commands/
-    └── SyncFabricPatternsCommand.php # Sync command
-```
-
 ### Adding Custom Patterns
 
 You can add custom patterns by creating them in the database or extending the service to load from additional sources.
@@ -271,17 +251,3 @@ Built on [Laravel Loop](https://github.com/kirschbaum-development/laravel-loop),
 
 * Pattern names use format `fabric_{pattern_name}`
 * Use `fabric_search_patterns` to find available tools
-
-### Debugging
-
-Enable debug mode:
-
-```bash
-php artisan loop:mcp:start --debug
-```
-
-Check application logs:
-
-```bash
-php artisan pail
-```

@@ -14,7 +14,8 @@ class SyncFabricPatternsCommand extends Command
      */
     protected $signature = 'fabric:sync-patterns
                             {--force : Force sync even if recently synced}
-                            {--pattern= : Sync only a specific pattern}';
+                            {--pattern= : Sync only a specific pattern}
+                            {--legacy : Use the legacy sync method (N+1 API calls)}';
 
     /**
      * The console command description.
@@ -33,7 +34,6 @@ class SyncFabricPatternsCommand extends Command
         try {
             $startTime = microtime(true);
 
-            // Check if we need to force sync
             if (! $this->option('force')) {
                 $lastSync = cache('fabric_patterns_last_sync');
                 if ($lastSync && $lastSync->gt(now()->subHour())) {
@@ -43,8 +43,14 @@ class SyncFabricPatternsCommand extends Command
                 }
             }
 
-            // Sync patterns
-            $stats = $patternService->syncPatterns();
+            // Use legacy method if requested
+            if ($this->option('legacy')) {
+                $this->warn('🔄 Using legacy sync method (N+1 API calls)...');
+                $stats = $patternService->syncPatternsLegacy();
+            } else {
+                $this->info('🚀 Using bulk sync method (GitHub Tree API)...');
+                $stats = $patternService->syncPatterns();
+            }
 
             $duration = round((microtime(true) - $startTime) * 1000, 2);
 
@@ -64,12 +70,12 @@ class SyncFabricPatternsCommand extends Command
 
             $this->info('🎯 Fabric patterns are now available as MCP tools!');
 
+            return self::SUCCESS;
+
         } catch (\Exception $e) {
             $this->error("❌ Synchronization failed: {$e->getMessage()}");
 
             return self::FAILURE;
         }
-
-        return self::SUCCESS;
     }
 }
