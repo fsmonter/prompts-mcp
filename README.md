@@ -2,24 +2,21 @@
 
 A Laravel application that exposes [Fabric's](https://github.com/danielmiessler/fabric) extensive collection of AI patterns through the Model Context Protocol (MCP), making them instantly accessible to AI assistants like Claude Desktop, Cursor, and other MCP-compatible clients.
 
-## What This Does
+## Overview
 
-This Laravel MCP server transforms Fabric's 200+ curated AI patterns into standardized MCP tools that can be seamlessly integrated with AI clients. Instead of manually copying prompts or setting up CLI tools, you can access all Fabric patterns directly through your AI assistant.
+This Laravel MCP server transforms Fabric's 200+ curated AI patterns into standardized MCP tools for seamless integration with AI clients. Rather than manually copying prompts or configuring CLI tools, you can access all Fabric patterns directly through your AI assistant.
 
-## Features
+## Key Features
 
-* **Complete Fabric Pattern Library**: Access to all 200+ patterns from the official Fabric repository
-* **Real-time Sync**: Automatic synchronization with the latest Fabric patterns
-* **MCP Standard Compliance**: Works with any MCP-compatible client (Claude Desktop, Cursor, Windsurf, etc.)
-* **Pattern Discovery**: Search, filter, and browse patterns by category
-* **Usage Analytics**: Track pattern execution and performance
-* **Laravel Native**: Built with Laravel's elegant architecture and tooling
+* **Complete Fabric Pattern Library**: Full access to 200+ patterns from the official Fabric repository
+* **MCP Standard Compliance**: Compatible with any MCP-enabled client (Claude Desktop, Cursor, Windsurf, etc.)
+* **Intelligent Pattern Discovery**: Search, filter, and browse patterns by category with advanced discovery tools
 
 ## Installation
 
 ### Prerequisites
 
-* PHP 8.2+
+* PHP 8.2 or higher
 * Composer
 * Laravel 12.x
 * SQLite (default) or your preferred database
@@ -41,13 +38,13 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-3. **Run migrations**:
+3. **Initialize database**:
 
 ```bash
 php artisan migrate
 ```
 
-4. **Sync Fabric patterns**:
+4. **Synchronize Fabric patterns**:
 
 ```bash
 php artisan fabric:sync-patterns
@@ -63,7 +60,7 @@ Generate configuration for your MCP client:
 php artisan loop:mcp:generate-config
 ```
 
-This will guide you through setting up:
+This command guides you through setting up:
 
 * Claude Desktop
 * Cursor
@@ -71,7 +68,7 @@ This will guide you through setting up:
 
 ### Environment Variables
 
-The following environment variables control MCP server behavior:
+Configure MCP server behavior with these environment variables:
 
 ```env
 # Enable MCP transport
@@ -82,7 +79,7 @@ LOOP_SSE_ENABLED=true
 
 ### Available MCP Tools
 
-Once configured, your AI client will have access to these streamlined tools:
+Once configured, your AI client gains access to these streamlined tools:
 
 #### Core Execution Tool
 
@@ -95,7 +92,7 @@ Once configured, your AI client will have access to these streamlined tools:
   * Parameters: `query` (required), `limit` (optional)
 * `fabric_list_patterns_by_category` - Browse patterns by category
   * Parameters: `category` (optional)
-* `fabric_list_all_patterns` - Get complete pattern list
+* `fabric_list_all_patterns` - Retrieve complete pattern list
   * Parameters: `format` (optional: "compact" or "detailed")
 * `fabric_get_pattern_details` - Get detailed pattern information
   * Parameters: `pattern_name` (required)
@@ -123,7 +120,7 @@ Once configured, your AI client will have access to these streamlined tools:
    Execute the analyze_claims pattern on this text: [content]
    ```
 
-See more examples using cursor in [./docs/cursor-examples](./docs/cursor-examples)
+For additional examples using Cursor, see [./docs/cursor-examples](./docs/cursor-examples)
 
 ### Connecting to Claude Desktop
 
@@ -244,12 +241,12 @@ Built on [Laravel Loop](https://github.com/kirschbaum-development/laravel-loop),
 
 **"MCP connection failed"**
 
-* Ensure Laravel server is running
-* Check the MCP endpoint URL
-* Verify authentication if configured
-* \[Laravel Loop] Error checking session existence: Connection refused: Check your Redis server is running
+* Ensure the Laravel server is running
+* Verify the MCP endpoint URL
+* Check authentication configuration if enabled
+* [Laravel Loop] Error checking session existence: Connection refused - Check your Redis server is running
 
 **"Tool not found"**
 
-* Pattern names use format `fabric_{pattern_name}`
+* Pattern names use the format `fabric_{pattern_name}`
 * Use `fabric_search_patterns` to find available tools
