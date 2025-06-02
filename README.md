@@ -122,6 +122,7 @@ Once configured, your AI client will have access to these streamlined tools:
    ```
    Execute the analyze_claims pattern on this text: [content]
    ```
+
 See more examples using cursor in [./docs/cursor-examples](./docs/cursor-examples)
 
 ### Connecting to Claude Desktop
@@ -246,6 +247,7 @@ Built on [Laravel Loop](https://github.com/kirschbaum-development/laravel-loop),
 * Ensure Laravel server is running
 * Check the MCP endpoint URL
 * Verify authentication if configured
+* \[Laravel Loop] Error checking session existence: Connection refused: Check your Redis server is running
 
 **"Tool not found"**
 
