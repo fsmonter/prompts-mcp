@@ -13,9 +13,8 @@ class SyncFabricPatternsCommand extends Command
      * @var string
      */
     protected $signature = 'fabric:sync-patterns
-                            {--force : Force sync even if recently synced}
-                            {--pattern= : Sync only a specific pattern}
-                            {--legacy : Use the legacy sync method (N+1 API calls)}';
+                            {--force : Force sync}
+                            {--pattern= : Sync only a specific pattern}';
 
     /**
      * The console command description.
@@ -43,14 +42,8 @@ class SyncFabricPatternsCommand extends Command
                 }
             }
 
-            // Use legacy method if requested
-            if ($this->option('legacy')) {
-                $this->warn('🔄 Using legacy sync method (N+1 API calls)...');
-                $stats = $patternService->syncPatternsLegacy();
-            } else {
-                $this->info('🚀 Using bulk sync method (GitHub Tree API)...');
-                $stats = $patternService->syncPatterns();
-            }
+            $this->info('🚀 Using bulk sync method (GitHub Tree API)...');
+            $stats = $patternService->syncPatterns();
 
             $duration = round((microtime(true) - $startTime) * 1000, 2);
 
@@ -72,7 +65,7 @@ class SyncFabricPatternsCommand extends Command
 
             return self::SUCCESS;
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->error("❌ Synchronization failed: {$e->getMessage()}");
 
             return self::FAILURE;

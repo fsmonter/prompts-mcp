@@ -79,5 +79,11 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "path",
+            "url": "~/kdg/laravel-loop"
+        }
+    ]
 }

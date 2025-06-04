@@ -244,7 +244,7 @@ Built on [Laravel Loop](https://github.com/kirschbaum-development/laravel-loop),
 * Ensure the Laravel server is running
 * Verify the MCP endpoint URL
 * Check authentication configuration if enabled
-* [Laravel Loop] Error checking session existence: Connection refused - Check your Redis server is running
+* \[Laravel Loop] Error checking session existence: Connection refused - Check your Redis server is running
 
 **"Tool not found"**
 

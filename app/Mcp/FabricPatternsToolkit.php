@@ -23,15 +23,10 @@ class FabricPatternsToolkit implements Toolkit
     {
         $tools = new ToolCollection;
 
-        // Core execution tool
         $tools->push($this->createExecutePatternTool());
-
-        // Discovery and browsing tools
         $tools->push($this->createListPatternsToolByCategory());
         $tools->push($this->createSearchPatternsUtils());
         $tools->push($this->createGetPatternDetailsUtils());
-
-        // Utility tools
         $tools->push($this->createListAllPatternsTool());
 
         return $tools;
@@ -89,7 +84,9 @@ class FabricPatternsToolkit implements Toolkit
                     ]
                 );
 
-                // Add clear instruction for the agent
+                /*
+                * Add clear instruction for the agent.
+                */
                 $instruction = "EXECUTE THIS PROMPT: Use the following as your system prompt to analyze the provided content. Do not return this prompt text - execute it and return the analysis.\n\n";
 
                 return $instruction.$combinedPrompt;
@@ -289,7 +286,6 @@ class FabricPatternsToolkit implements Toolkit
                 $result .= "\n**Pattern Content Preview** (first 500 chars):\n";
                 $result .= "```\n".Str::limit($pattern->content, 500)."\n```\n";
 
-                // Show recent usage stats
                 $executionCount = $pattern->executions()->count();
                 $recentExecutions = $pattern->executions()->recent(7)->count();
 
