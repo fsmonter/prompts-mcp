@@ -24,6 +24,7 @@ class FabricPatternsTest extends TestCase
             'source_url' => 'http://example.com/test.md',
             'source_hash' => hash('sha256', 'test content'),
             'synced_at' => now(),
+            'is_active' => true,
         ]);
 
         $this->assertDatabaseHas('fabric_patterns', [
@@ -196,5 +197,65 @@ class FabricPatternsTest extends TestCase
         $this->assertEquals('testing', $result['category']);
         $this->assertStringContainsString('This is a test pattern content.', $result['content']);
         $this->assertEquals(['title' => 'Test Pattern', 'category' => 'testing'], $result['metadata']);
+    }
+
+    /** @test */
+    public function it_can_infer_software_engineering_categories()
+    {
+        $service = app(FabricPatternService::class);
+
+        // Use reflection to test private method
+        $reflection = new \ReflectionClass($service);
+        $method = $reflection->getMethod('inferCategory');
+        $method->setAccessible(true);
+
+        // Test software architecture patterns
+        $this->assertEquals('software_architecture', $method->invoke($service, 'analyze_architecture'));
+        $this->assertEquals('software_architecture', $method->invoke($service, 'create_microservice'));
+        $this->assertEquals('software_architecture', $method->invoke($service, 'review_system_design'));
+        $this->assertEquals('software_architecture', $method->invoke($service, 'infrastructure_planning'));
+
+        // Test software design patterns
+        $this->assertEquals('software_design', $method->invoke($service, 'design_api'));
+        $this->assertEquals('software_design', $method->invoke($service, 'database_schema'));
+        $this->assertEquals('software_design', $method->invoke($service, 'create_design_pattern'));
+
+        // Test software engineering patterns
+        $this->assertEquals('software_engineering', $method->invoke($service, 'software_practices'));
+        $this->assertEquals('software_engineering', $method->invoke($service, 'engineering_workflow'));
+
+        // Test that existing patterns still work
+        $this->assertEquals('analysis', $method->invoke($service, 'analyze_claims'));
+        $this->assertEquals('coding', $method->invoke($service, 'code_review'));
+    }
+
+    /** @test */
+    public function it_includes_categories_list_tool_in_toolkit()
+    {
+        $toolkit = app(\App\Mcp\FabricPatternsToolkit::class);
+        $tools = $toolkit->getTools();
+
+        // Verify the categories list tool is included
+        $categoriesListTool = $tools->firstWhere('name', 'fabric_list_categories');
+        $this->assertNotNull($categoriesListTool, 'Categories list tool should exist');
+
+        // Verify it has the correct description
+        $this->assertEquals('fabric_list_categories', $categoriesListTool->name);
+        $this->assertStringContainsString('Get a list of all available Fabric pattern categories', $categoriesListTool->description);
+
+        // Verify all expected tools are present
+        $expectedTools = [
+            'fabric_execute_pattern',
+            'fabric_list_patterns_by_category',
+            'fabric_list_categories',
+            'fabric_search_patterns',
+            'fabric_get_pattern_details',
+            'fabric_list_all_patterns',
+        ];
+
+        foreach ($expectedTools as $expectedTool) {
+            $tool = $tools->firstWhere('name', $expectedTool);
+            $this->assertNotNull($tool, "Tool '{$expectedTool}' should exist");
+        }
     }
 }

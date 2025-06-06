@@ -362,6 +362,24 @@ class FabricPatternService
     private function inferCategory(string $name): string
     {
         $categoryMappings = [
+            // Multi-word software engineering terms first
+            'code_review' => 'coding',
+            'system_design' => 'software_architecture',
+            'api_design' => 'software_design',
+            'database_design' => 'software_design',
+            // More specific software engineering terms
+            'architecture' => 'software_architecture',
+            'architect' => 'software_architecture',
+            'microservice' => 'software_architecture',
+            'infrastructure' => 'software_architecture',
+            'engineering' => 'software_engineering',
+            'software' => 'software_engineering',
+            'database' => 'software_design',
+            'pattern' => 'software_design',
+            'api' => 'software_design',
+            'design' => 'software_design',
+            'system' => 'software_architecture',
+            // General terms after specific ones
             'analyze' => 'analysis',
             'extract' => 'extraction',
             'create' => 'creation',

@@ -90,6 +90,8 @@ Once configured, your AI client gains access to these streamlined tools:
 
 * `fabric_search_patterns` - Search patterns by keyword
   * Parameters: `query` (required), `limit` (optional)
+* `fabric_list_categories` - List all available pattern categories with descriptions
+  * Parameters: `format` (optional: "simple", "detailed", or "summary")
 * `fabric_list_patterns_by_category` - Browse patterns by category
   * Parameters: `category` (optional)
 * `fabric_list_all_patterns` - Retrieve complete pattern list
@@ -105,17 +107,22 @@ Once configured, your AI client gains access to these streamlined tools:
    Then use fabric_execute_pattern with pattern_name "analyze_claims" and this article: [paste content]
    ```
 
-2. **Browse patterns by category**:
+2. **List available categories**:
+   ```
+   List all available Fabric pattern categories
+   ```
+
+3. **Browse patterns by category**:
    ```
    Show me all patterns in the "writing" category
    ```
 
-3. **Get pattern details**:
+4. **Get pattern details**:
    ```
    Get details for the pattern "create_summary"
    ```
 
-4. **Quick execution**:
+5. **Quick execution**:
    ```
    Execute the analyze_claims pattern on this text: [content]
    ```
@@ -166,6 +173,9 @@ The server includes all official Fabric patterns organized by category:
 * **Coding**: `create_coding_project`, `code_review`, `explain_code`, etc.
 * **Business**: `create_business_plan`, `analyze_market`, etc.
 * **Research**: `extract_wisdom`, `summarize_paper`, `find_logical_fallacies`, etc.
+* **Software Architecture**: Design patterns, system architecture, microservices, infrastructure
+* **Software Design**: API design, database design, design patterns, application structure
+* **Software Engineering**: Engineering practices, methodologies, development processes
 
 ## Artisan Commands
 

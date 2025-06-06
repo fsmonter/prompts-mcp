@@ -25,6 +25,7 @@ class FabricPatternsToolkit implements Toolkit
 
         $tools->push($this->createExecutePatternTool());
         $tools->push($this->createListPatternsToolByCategory());
+        $tools->push($this->createListCategoriesUtils());
         $tools->push($this->createSearchPatternsUtils());
         $tools->push($this->createGetPatternDetailsUtils());
         $tools->push($this->createListAllPatternsTool());
@@ -192,6 +193,81 @@ class FabricPatternsToolkit implements Toolkit
 
                     $result .= "*Use `fabric_list_patterns_by_category` with a specific category name to see all patterns in that category.*\n";
                 }
+
+                return $result;
+            });
+    }
+
+    /**
+     * Create a tool to list available pattern categories
+     */
+    private function createListCategoriesUtils(): CustomTool
+    {
+        return CustomTool::make(
+            name: 'fabric_list_categories',
+            description: 'Get a list of all available Fabric pattern categories with pattern counts and descriptions',
+        )
+            ->withStringParameter(
+                name: 'format',
+                description: 'Output format: "simple" (category names only), "detailed" (with counts and descriptions), or "summary" (categories with sample patterns)',
+                required: false
+            )
+            ->using(function (string $format = 'detailed') {
+                $categories = $this->patternService->getCategories();
+
+                if (empty($categories)) {
+                    return "No categories available. Run 'php artisan fabric:sync-patterns' to sync patterns.";
+                }
+
+                if ($format === 'simple') {
+                    return "## Available Categories:\n\n".implode(', ', $categories);
+                }
+
+                $result = '## Fabric Pattern Categories ('.count($categories)." total):\n\n";
+
+                // Category descriptions
+                $categoryDescriptions = [
+                    'analysis' => '🔍 Analyze content for claims, debates, papers, etc.',
+                    'creation' => '🎨 Generate summaries, visualizations, documentation',
+                    'extraction' => '📝 Extract insights, wisdom, ideas, and recommendations',
+                    'writing' => '✍️ Generate essays, reports, and technical documentation',
+                    'coding' => '💻 Code analysis, review, and project creation',
+                    'improvement' => '🔧 Enhance writing, prompts, and reports',
+                    'review' => '📋 Review designs and conduct assessments',
+                    'explanation' => '📖 Explain documentation, math, projects, and terms',
+                    'summarization' => '📑 Create different types of summaries',
+                    'search' => '🔍 Find specific information or identify issues',
+                    'comparison' => '⚖️ Compare and contrast items',
+                    'business' => '💼 Business planning, market analysis, strategy',
+                    'research' => '🔬 Academic research, scientific analysis',
+                    'general' => '🌟 Versatile patterns for various tasks',
+                    'software_architecture' => '🏗️ System design, microservices, infrastructure',
+                    'software_design' => '🎨 API design, database design, design patterns',
+                    'software_engineering' => '⚙️ Engineering practices, methodologies, processes',
+                ];
+
+                foreach ($categories as $category) {
+                    $patterns = $this->patternService->getPatternsByCategory($category);
+                    $count = $patterns->count();
+                    $description = $categoryDescriptions[$category] ?? '📁 General category';
+
+                    $result .= "### {$category} ({$count} patterns)\n";
+                    $result .= "{$description}\n";
+
+                    if ($format === 'summary') {
+                        $samplePatterns = $patterns->take(3);
+                        if ($samplePatterns->isNotEmpty()) {
+                            $result .= '**Sample patterns**: '.implode(', ', $samplePatterns->pluck('name')->toArray())."\n";
+                            if ($count > 3) {
+                                $result .= '... and '.($count - 3)." more\n";
+                            }
+                        }
+                    }
+                    $result .= "\n";
+                }
+
+                $result .= "*Use `fabric_list_patterns_by_category` with a category name to see all patterns in that category.*\n";
+                $result .= "*Use `fabric_execute_pattern` with any pattern name to run it.*\n";
 
                 return $result;
             });

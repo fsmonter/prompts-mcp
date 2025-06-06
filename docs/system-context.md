@@ -71,6 +71,9 @@ graph TB
         Coding["💻 Coding Patterns<br/>code_review, create_project"]
         Business["💼 Business Patterns<br/>business_plan, market_analysis"]
         Research["🔬 Research Patterns<br/>extract_wisdom, summarize_paper"]
+        SoftwareArchitecture["🏗️ Software Architecture<br/>system design, microservices"]
+        SoftwareDesign["🎨 Software Design<br/>API design, patterns, databases"]
+        SoftwareEngineering["⚙️ Software Engineering<br/>practices, methodologies"]
     end
     
     PatternModel -.->|"📂 Organized into"| Categories
@@ -90,7 +93,6 @@ graph TB
     class ExecTool,SearchTool,ListTool,DetailsTool,CategoryTool tool
     class STDIO,SSE,HTTP transport
 ```
-
 
 | Delivery Method | Setup Complexity | Distribution | Maintenance | Developer Experience | Scalability |
 |---|---|---|---|---|---|
