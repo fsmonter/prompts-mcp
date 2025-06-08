@@ -1,16 +1,18 @@
-# Fabric Patterns MCP Server
+# Prompt Library MCP Server
 
-A Laravel application that exposes [Fabric's](https://github.com/danielmiessler/fabric) extensive collection of AI patterns through the Model Context Protocol (MCP), making them instantly accessible to AI assistants like Claude Desktop, Cursor, and other MCP-compatible clients.
+A Laravel application that provides a unified prompt library accessible through the Model Context Protocol (MCP). Create custom prompts via a simple web interface or automatically sync prompts from external sources like [Fabric's](https://github.com/danielmiessler/fabric) extensive collection of AI patterns.
 
 ## Overview
 
-This Laravel MCP server transforms Fabric's 200+ curated AI patterns into standardized MCP tools for seamless integration with AI clients. Rather than manually copying prompts or configuring CLI tools, you can access all Fabric patterns directly through your AI assistant.
+This Laravel MCP server transforms any prompt collection into standardized MCP tools for seamless integration with AI clients. Access Fabric's 200+ curated patterns, create your own custom prompts, or sync from other repositories - all through a single, searchable library.
 
 ## Key Features
 
-* **Complete Fabric Pattern Library**: Full access to 200+ patterns from the official Fabric repository
+* **Unified Prompt Library**: Single interface for all prompt types (Fabric patterns, custom prompts, external sources)
+* **Simple Web Interface**: Clean, intuitive form for creating and managing custom prompts
 * **MCP Standard Compliance**: Compatible with any MCP-enabled client (Claude Desktop, Cursor, Windsurf, etc.)
-* **Intelligent Pattern Discovery**: Search, filter, and browse patterns by category with advanced discovery tools
+* **Intelligent Discovery**: Search, filter, and browse prompts by category, source, and tags
+* **Backward Compatible**: Existing Fabric integrations continue working seamlessly
 
 ## Installation
 
@@ -26,8 +28,8 @@ This Laravel MCP server transforms Fabric's 200+ curated AI patterns into standa
 1. **Clone and install dependencies**:
 
 ```bash
-git clone <repository-url> fabric-prompts
-cd fabric-prompts
+git clone <repository-url> prompt-library
+cd prompt-library
 composer install
 ```
 
@@ -44,92 +46,64 @@ php artisan key:generate
 php artisan migrate
 ```
 
-4. **Synchronize Fabric patterns**:
+4. **Sync Fabric patterns** (optional):
 
 ```bash
-php artisan fabric:sync-patterns
-```
-
-## Configuration
-
-### MCP Server Setup
-
-Generate configuration for your MCP client:
-
-```bash
-php artisan loop:mcp:generate-config
-```
-
-This command guides you through setting up:
-
-* Claude Desktop
-* Cursor
-* Other MCP clients
-
-### Environment Variables
-
-Configure MCP server behavior with these environment variables:
-
-```env
-# Enable MCP transport
-LOOP_SSE_ENABLED=true
+php artisan prompts:sync --source=fabric
 ```
 
 ## Usage
 
-### Available MCP Tools
+### Web Interface
 
-Once configured, your AI client gains access to these streamlined tools:
+Visit your application URL to access the prompt library:
 
-#### Core Execution Tool
+- **Browse Library**: View all prompts with filtering by source, category, and search
+- **Create Custom Prompts**: Simple form with title, description, content, and categorization
+- **Manage Prompts**: Edit and organize your custom prompts
 
-* `fabric_execute_pattern` - Execute any Fabric pattern by name
+### MCP Integration
+
+Once configured, your AI client gains access to these unified tools:
+
+#### Core Tools
+
+* `fabric_execute_pattern` - Compose any prompt (Fabric or custom) with user input
   * Parameters: `pattern_name` (required), `input_content`, `additional_context`
 
-#### Discovery and Browsing Tools
+#### Discovery Tools
 
-* `fabric_search_patterns` - Search patterns by keyword
-  * Parameters: `query` (required), `limit` (optional)
-* `fabric_list_categories` - List all available pattern categories with descriptions
-  * Parameters: `format` (optional: "simple", "detailed", or "summary")
-* `fabric_list_patterns_by_category` - Browse patterns by category
-  * Parameters: `category` (optional)
-* `fabric_list_all_patterns` - Retrieve complete pattern list
-  * Parameters: `format` (optional: "compact" or "detailed")
-* `fabric_get_pattern_details` - Get detailed pattern information
-  * Parameters: `pattern_name` (required)
+* `fabric_search_patterns` - Search across all prompt sources
+* `fabric_list_categories` - List categories with prompt counts
+* `fabric_list_patterns_by_category` - Browse by category
+* `fabric_list_all_patterns` - Complete prompt catalog
+* `fabric_get_pattern_details` - Detailed prompt information
 
 ### Example Usage in Claude Desktop
 
-1. **Find and execute a pattern**:
+1. **Use a Fabric pattern**:
    ```
-   Search for patterns related to "analysis"
-   Then use fabric_execute_pattern with pattern_name "analyze_claims" and this article: [paste content]
-   ```
-
-2. **List available categories**:
-   ```
-   List all available Fabric pattern categories
+   Execute the analyze_claims pattern on this article: [paste content]
    ```
 
-3. **Browse patterns by category**:
+2. **Use a custom prompt**:
    ```
-   Show me all patterns in the "writing" category
-   ```
-
-4. **Get pattern details**:
-   ```
-   Get details for the pattern "create_summary"
+   Execute my-custom-analysis with this data: [paste content]
    ```
 
-5. **Quick execution**:
+3. **Browse available prompts**:
    ```
-   Execute the analyze_claims pattern on this text: [content]
+   List all prompts in the writing category
    ```
 
-For additional examples using Cursor, see [./docs/cursor-examples](./docs/cursor-examples)
+4. **Search prompts**:
+   ```
+   Search for prompts related to "code review"
+   ```
 
-### Connecting to Claude Desktop
+## Connecting to AI Clients
+
+### Claude Desktop
 
 1. **Generate configuration**:
    ```bash
@@ -140,7 +114,7 @@ For additional examples using Cursor, see [./docs/cursor-examples](./docs/cursor
    ```json
    {
      "mcpServers": {
-       "fabric-patterns": {
+       "prompt-library": {
          "transport": "sse",
          "url": "http://your-app-url/mcp/sse"
        }
@@ -150,113 +124,126 @@ For additional examples using Cursor, see [./docs/cursor-examples](./docs/cursor
 
 3. **Restart Claude Desktop**
 
-### Connecting to Cursor
+### Cursor
 
-1. **Using STDIO** (recommended):
-   ```json
-   {
-     "mcpServers": {
-       "fabric-patterns": {
-         "command": "php",
-         "args": ["/path/to/your/project/artisan", "loop:mcp:start"]
-       }
-     }
-   }
-   ```
-
-## Available Patterns
-
-The server includes all official Fabric patterns organized by category:
-
-* **Analysis**: `analyze_claims`, `analyze_debate`, `analyze_paper`, etc.
-* **Writing**: `write_essay`, `write_micro_essay`, `improve_writing`, etc.
-* **Coding**: `create_coding_project`, `code_review`, `explain_code`, etc.
-* **Business**: `create_business_plan`, `analyze_market`, etc.
-* **Research**: `extract_wisdom`, `summarize_paper`, `find_logical_fallacies`, etc.
-* **Software Architecture**: Design patterns, system architecture, microservices, infrastructure
-* **Software Design**: API design, database design, design patterns, application structure
-* **Software Engineering**: Engineering practices, methodologies, development processes
-
-## Artisan Commands
-
-### Pattern Management
-
-```bash
-# Sync all patterns from Fabric repository
-php artisan fabric:sync-patterns
-
-# Force sync (ignore cache)
-php artisan fabric:sync-patterns --force
-
-# Sync specific pattern
-php artisan fabric:sync-patterns --pattern=analyze_claims
+```json
+{
+  "mcpServers": {
+    "prompt-library": {
+      "command": "php",
+      "args": ["/path/to/your/project/artisan", "loop:mcp:start"]
+    }
+  }
+}
 ```
 
-### MCP Server
+## Prompt Sources
+
+### Fabric Patterns (Automatic)
+- 200+ official patterns from danielmiessler/fabric
+- Automatically categorized and tagged
+- Synced via `php artisan prompts:sync --source=fabric`
+
+### Custom Prompts (Manual)
+- Create through web interface
+- Full control over content, categorization, and visibility
+- Support for template variables ({{INPUT}}, $INPUT)
+
+### Future Sources
+The architecture supports additional sources:
+- GitHub repositories with similar structure
+- API-based prompt services
+- Imported prompt collections
+
+## Commands
+
+### Prompt Management
 
 ```bash
+# Sync from external sources
+php artisan prompts:sync --source=fabric
+php artisan prompts:sync --source=all --force
+
 # Generate MCP client configuration
 php artisan loop:mcp:generate-config
 
 # Start STDIO MCP server
 php artisan loop:mcp:start
-
-# Start with debug mode
-php artisan loop:mcp:start --debug
 ```
 
-### Adding Custom Patterns
+### Creating Custom Prompts
 
-You can add custom patterns by creating them in the database or extending the service to load from additional sources.
+Via Web Interface:
+1. Visit `/prompts/create`
+2. Fill in title, description, content, and category
+3. Use template variables like `{{INPUT}}` for user content
+4. Set visibility (public/private)
 
-### Testing
+Via Code:
+```php
+use App\Services\PromptService;
 
-```bash
-# Run tests
-php artisan test
-
-# Test specific pattern
-php artisan tinker
->>> $pattern = App\Models\FabricPattern::where('name', 'analyze_claims')->first();
->>> $service = app(App\Services\FabricPatternService::class);
->>> $result = $service->executePattern($pattern, 'Test content');
+$promptService = app(PromptService::class);
+$prompt = $promptService->createManualPrompt([
+    'title' => 'My Custom Prompt',
+    'description' => 'Analyzes marketing copy',
+    'content' => 'You are a marketing expert. Analyze: {{INPUT}}',
+    'category' => 'analysis',
+    'tags' => ['marketing', 'analysis'],
+    'is_public' => true,
+]);
 ```
 
 ## Architecture
 
+### Unified Data Model
+- Single `prompts` table stores all prompt types
+- `source_type` field differentiates: `'manual'`, `'fabric'`, `'github'`
+- Consistent API across all prompt sources
+
 ### MCP Integration
-
-Built on [Laravel Loop](https://github.com/kirschbaum-development/laravel-loop), this server:
-
-1. **Dynamically generates MCP tools** for each Fabric pattern
-2. **Provides pattern discovery** through utility tools
-3. **Tracks usage analytics** for monitoring and optimization
-4. **Handles real-time updates** from the Fabric repository
-
-### Pattern Processing
-
-1. Patterns are fetched from the Fabric GitHub repository
-2. Parsed for metadata (title, description, category, tags)
-3. Stored in the database with change detection
-4. Exposed as individual MCP tools with appropriate schemas
+Built on [Laravel Loop](https://github.com/kirschbaum-development/laravel-loop):
+1. **Unified toolkit** exposes all prompts through same interface
+2. **Backward compatible** - existing `fabric_execute_pattern` still works
+3. **Source-aware** - indicates prompt origin in responses
+4. **Usage tracking** - monitors prompt composition for analytics
 
 ## Troubleshooting
 
 ### Common Issues
 
-**"No patterns found"**
-
-* Run `php artisan fabric:sync-patterns` to sync patterns
-* Check internet connectivity to GitHub
+**"No prompts found"**
+* Run `php artisan prompts:sync --source=fabric` to sync Fabric patterns
+* Check web interface at `/prompts` to verify prompts exist
 
 **"MCP connection failed"**
-
-* Ensure the Laravel server is running
-* Verify the MCP endpoint URL
-* Check authentication configuration if enabled
-* \[Laravel Loop] Error checking session existence: Connection refused - Check your Redis server is running
+* Ensure Laravel server is running
+* Verify MCP endpoint URL in client configuration
+* Check authentication if enabled
 
 **"Tool not found"**
+* Pattern names use exact format from prompt library
+* Use `fabric_search_patterns` to find available prompts
+* Check web interface for correct prompt names
 
-* Pattern names use the format `fabric_{pattern_name}`
-* Use `fabric_search_patterns` to find available tools
+## Testing
+
+```bash
+# Run all tests
+php artisan test
+
+# Test specific features
+php artisan test --filter PromptManagementTest
+php artisan test --filter McpIntegrationTest
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Add tests for new functionality
+4. Submit a pull request
+
+## License
+
+MIT License - see LICENSE file for details.

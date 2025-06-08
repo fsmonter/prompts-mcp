@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\PromptController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('prompts.index');
 });
+
+Route::resource('prompts', PromptController::class);

@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-use App\Mcp\FabricPatternsToolkit;
-use App\Services\FabricPatternService;
+use App\Mcp\PromptLibraryToolkit;
+use App\Services\GitSyncService;
+use App\Services\PromptService;
 use Illuminate\Http\Client\Factory as HttpClient;
 use Illuminate\Support\ServiceProvider;
 use Kirschbaum\Loop\Facades\Loop;
@@ -16,10 +17,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(FabricPatternService::class, function ($app) {
-            return new FabricPatternService(
+        $this->app->singleton(GitSyncService::class, function ($app) {
+            return new GitSyncService(
                 $app->make(HttpClient::class),
                 new CommonMarkConverter
+            );
+        });
+
+        $this->app->singleton(PromptService::class, function ($app) {
+            return new PromptService(
+                $app->make(HttpClient::class),
+                new CommonMarkConverter,
+                $app->make(GitSyncService::class)
             );
         });
     }
@@ -30,8 +39,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Loop::toolkit(
-            new FabricPatternsToolkit(
-                $this->app->make(FabricPatternService::class)
+            new PromptLibraryToolkit(
+                $this->app->make(PromptService::class)
             )
         );
     }
