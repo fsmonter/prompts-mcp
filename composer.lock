@@ -1103,11 +1103,11 @@
         },
         {
             "name": "kirschbaum-development/laravel-loop",
-            "version": "dev-cursor-deeplink",
+            "version": "dev-feature/debug-call-command",
             "dist": {
                 "type": "path",
-                "url": "/Users/fernandos.monter/kdg/laravel-loop",
-                "reference": "835010cd56bf127d84fe1c653b77f32698984d5c"
+                "url": "/Users/fsmonter/kdg/laravel-loop",
+                "reference": "53b1c2024ce6aa922958a4ce5ccf7f15917d2e6a"
             },
             "require": {
                 "illuminate/database": "^11.0|^12.0",

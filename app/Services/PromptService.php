@@ -32,7 +32,6 @@ class PromptService
      */
     public function syncFabricPatterns(): array
     {
-        // Get or create Fabric source
         $fabricSource = PromptSource::firstOrCreate(
             ['name' => 'fabric'],
             [
