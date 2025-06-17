@@ -106,10 +106,6 @@ class PromptController extends Controller
      */
     public function edit(Prompt $prompt)
     {
-        if ($prompt->source_type !== 'manual') {
-            abort(403, 'Only manual prompts can be edited.');
-        }
-
         $categories = $this->promptService->getCategories();
 
         return view('prompts.edit', compact('prompt', 'categories'));
@@ -133,7 +129,6 @@ class PromptController extends Controller
             'is_public' => 'boolean',
         ]);
 
-        // Process tags
         $validated['tags'] = $request->filled('tags')
             ? array_map('trim', explode(',', $validated['tags']))
             : [];

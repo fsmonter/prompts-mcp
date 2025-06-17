@@ -68,27 +68,27 @@ Once configured, your AI client gains access to these unified tools:
 
 #### Core Tools
 
-* `fabric_execute_pattern` - Compose any prompt (Fabric or custom) with user input
-  * Parameters: `pattern_name` (required), `input_content`, `additional_context`
+* `compose_prompt` - Compose any prompt (Fabric or custom) with user input
+  * Parameters: `prompt_name` (required), `input_content`, `additional_context`
 
 #### Discovery Tools
 
-* `fabric_search_patterns` - Search across all prompt sources
-* `fabric_list_categories` - List categories with prompt counts
-* `fabric_list_patterns_by_category` - Browse by category
-* `fabric_list_all_patterns` - Complete prompt catalog
-* `fabric_get_pattern_details` - Detailed prompt information
+* `search_prompts` - Search across all prompt sources
+* `list_categories` - List categories with prompt counts
+* `list_prompts_by_category` - Browse by category
+* `list_all_prompts` - Complete prompt catalog
+* `get_prompt_details` - Detailed prompt information
 
 ### Example Usage in Claude Desktop
 
 1. **Use a Fabric pattern**:
    ```
-   Execute the analyze_claims pattern on this article: [paste content]
+   Use the analyze_claims prompt on this article: [paste content]
    ```
 
 2. **Use a custom prompt**:
    ```
-   Execute my-custom-analysis with this data: [paste content]
+   Use my-custom-analysis with this data: [paste content]
    ```
 
 3. **Browse available prompts**:
@@ -204,9 +204,8 @@ $prompt = $promptService->createManualPrompt([
 ### MCP Integration
 Built on [Laravel Loop](https://github.com/kirschbaum-development/laravel-loop):
 1. **Unified toolkit** exposes all prompts through same interface
-2. **Backward compatible** - existing `fabric_execute_pattern` still works
-3. **Source-aware** - indicates prompt origin in responses
-4. **Usage tracking** - monitors prompt composition for analytics
+2. **Source-aware** - indicates prompt origin in responses
+3. **Usage tracking** - monitors prompt composition for analytics
 
 ## Troubleshooting
 
@@ -222,28 +221,6 @@ Built on [Laravel Loop](https://github.com/kirschbaum-development/laravel-loop):
 * Check authentication if enabled
 
 **"Tool not found"**
-* Pattern names use exact format from prompt library
-* Use `fabric_search_patterns` to find available prompts
+* Prompt names use exact format from prompt library
+* Use `search_prompts` to find available prompts
 * Check web interface for correct prompt names
-
-## Testing
-
-```bash
-# Run all tests
-php artisan test
-
-# Test specific features
-php artisan test --filter PromptManagementTest
-php artisan test --filter McpIntegrationTest
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Add tests for new functionality
-4. Submit a pull request
-
-## License
-
-MIT License - see LICENSE file for details.
