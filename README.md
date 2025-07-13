@@ -12,7 +12,6 @@ This Laravel MCP server transforms any prompt collection into standardized MCP t
 * **Simple Web Interface**: Clean, intuitive form for creating and managing custom prompts
 * **MCP Standard Compliance**: Compatible with any MCP-enabled client (Claude Desktop, Cursor, Windsurf, etc.)
 * **Intelligent Discovery**: Search, filter, and browse prompts by category, source, and tags
-* **Backward Compatible**: Existing Fabric integrations continue working seamlessly
 
 ## Installation
 
@@ -28,8 +27,8 @@ This Laravel MCP server transforms any prompt collection into standardized MCP t
 1. **Clone and install dependencies**:
 
 ```bash
-git clone <repository-url> prompt-library
-cd prompt-library
+git clone <repository-url> prompts-mcp
+cd prompts-mcp
 composer install
 ```
 
@@ -46,7 +45,7 @@ php artisan key:generate
 php artisan migrate
 ```
 
-4. **Sync Fabric patterns** (optional):
+4. **Sync Fabric patterns**:
 
 ```bash
 php artisan prompts:sync --source=fabric
