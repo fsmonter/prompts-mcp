@@ -4,14 +4,13 @@ A Laravel application that provides a unified prompt library accessible through 
 
 ## Overview
 
-This Laravel MCP server transforms any prompt collection into standardized MCP tools for seamless integration with AI clients. Access Fabric's 200+ curated patterns, create your own custom prompts, or sync from other repositories - all through a single, searchable library.
+Access Fabric's 200+ curated patterns, create your own custom prompts, or sync from other repositories. All through a single, searchable library.
 
 ## Key Features
 
 * **Unified Prompt Library**: Single interface for all prompt types (Fabric patterns, custom prompts, external sources)
-* **Simple Web Interface**: Clean, intuitive form for creating and managing custom prompts
-* **MCP Standard Compliance**: Compatible with any MCP-enabled client (Claude Desktop, Cursor, Windsurf, etc.)
-* **Intelligent Discovery**: Search, filter, and browse prompts by category, source, and tags
+* **Simple Web Interface**: Web UI for creating and managing custom prompts
+* **MCP Server Powered by [Laravel Loop](https://github.com/kirschbaumdevelopment/laravel-loop)**: Compatible with any MCP-enabled client (Claude Desktop, Cursor, Windsurf, etc.)
 
 ## Installation
 
