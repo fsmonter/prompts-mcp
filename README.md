@@ -48,14 +48,6 @@ php artisan prompts:sync --source=fabric
 
 ## Usage
 
-### Web Interface
-
-Visit your application URL to access the prompt library:
-
-- **Browse Library**: View all prompts with filtering by source, category, and search
-- **Create Custom Prompts**: Simple form with title, description, content, and categorization
-- **Manage Prompts**: Edit and organize your custom prompts
-
 ### MCP Integration
 
 Once configured, your AI client gains access to these unified tools:
@@ -148,6 +140,14 @@ The architecture supports additional sources:
 - GitHub repositories with similar structure
 - API-based prompt services
 - Imported prompt collections
+
+### Web Interface
+
+Visit your application URL to access the prompt library:
+
+- **Browse Library**: View all prompts with filtering by source, category, and search
+- **Create Custom Prompts**: Simple form with title, description, content, and categorization
+- **Manage Prompts**: Edit and organize your custom prompts
 
 ## Commands
 
