@@ -1,10 +1,6 @@
 # Prompt Library MCP Server
 
-A Laravel application that provides a unified prompt library accessible through the Model Context Protocol (MCP). Create custom prompts via a simple web interface or automatically sync prompts from external sources like [Fabric's](https://github.com/danielmiessler/fabric) extensive collection of AI patterns.
-
-## Overview
-
-Access Fabric's 200+ curated patterns, create your own custom prompts, or sync from other repositories. All through a single, searchable library.
+A Laravel application that provides a unified prompt library accessible through the Model Context Protocol (MCP). Access [Fabric's](https://github.com/danielmiessler/fabric) 200+ curated patterns, create custom prompts, or sync from other repositories. All through a single, searchable library.
 
 ## Key Features
 
