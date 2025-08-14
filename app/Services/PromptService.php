@@ -38,7 +38,7 @@ class PromptService
                 'type' => 'fabric',
                 'repository_url' => 'https://github.com/danielmiessler/fabric.git',
                 'branch' => 'main',
-                'path_pattern' => 'patterns/*/system.md',
+                'path_pattern' => 'data/patterns/*/system.md',
                 'file_pattern' => 'system.md',
                 'is_active' => true,
                 'auto_sync' => true,

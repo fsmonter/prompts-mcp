@@ -80,7 +80,7 @@ class GitSyncService
         $patternFiles = collect($tree['tree'])
             ->filter(function ($item) use ($source) {
                 return $item['type'] === 'blob'
-                    && str_starts_with($item['path'], 'patterns/')
+                    && str_starts_with($item['path'], 'data/patterns/')
                     && str_ends_with($item['path'], $source->file_pattern);
             })
             ->values();
@@ -219,7 +219,7 @@ class GitSyncService
     {
         $parts = explode('/', $path);
 
-        return $parts[1] ?? '';
+        return $parts[2] ?? '';
     }
 
     /**
