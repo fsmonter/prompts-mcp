@@ -16,7 +16,7 @@ class PromptService
     public function __construct(
         private readonly HttpClient $http,
         private readonly CommonMarkConverter $markdown,
-        private readonly GitSyncService $gitSync
+        private readonly GitSyncService $gitSync,
     ) {}
 
     /**
@@ -33,20 +33,21 @@ class PromptService
     public function syncFabricPatterns(): array
     {
         $fabricSource = PromptSource::firstOrCreate(
-            ['name' => 'fabric'],
+            ["name" => "fabric"],
             [
-                'type' => 'fabric',
-                'repository_url' => 'https://github.com/danielmiessler/fabric.git',
-                'branch' => 'main',
-                'path_pattern' => 'data/patterns/*/system.md',
-                'file_pattern' => 'system.md',
-                'is_active' => true,
-                'auto_sync' => true,
-                'metadata' => [
-                    'description' => 'Official Fabric AI patterns',
-                    'created_via' => 'migration',
+                "type" => "fabric",
+                "repository_url" =>
+                    "https://github.com/danielmiessler/fabric.git",
+                "branch" => "main",
+                "path_pattern" => "data/patterns/*/system.md",
+                "file_pattern" => "system.md",
+                "is_active" => true,
+                "auto_sync" => true,
+                "metadata" => [
+                    "description" => "Official Fabric AI patterns",
+                    "created_via" => "migration",
                 ],
-            ]
+            ],
         );
 
         return $this->gitSync->syncSource($fabricSource);
@@ -58,22 +59,25 @@ class PromptService
     public function composePrompt(
         Prompt $prompt,
         string $inputContent,
-        array $metadata = []
+        array $metadata = [],
     ): string {
         $startTime = microtime(true);
 
-        $composedContent = $this->processPromptContent($prompt->content, $inputContent);
+        $composedContent = $this->processPromptContent(
+            $prompt->content,
+            $inputContent,
+        );
 
         $composeTime = (microtime(true) - $startTime) * 1000;
 
         Composition::create([
-            'prompt_id' => $prompt->id,
-            'input_content' => $inputContent,
-            'composed_content' => $composedContent,
-            'metadata' => $metadata,
-            'tokens_used' => $this->estimateTokens($composedContent),
-            'compose_time_ms' => $composeTime,
-            'client_info' => $metadata['client'] ?? 'unknown',
+            "prompt_id" => $prompt->id,
+            "input_content" => $inputContent,
+            "composed_content" => $composedContent,
+            "metadata" => $metadata,
+            "tokens_used" => $this->estimateTokens($composedContent),
+            "compose_time_ms" => $composeTime,
+            "client_info" => $metadata["client"] ?? "unknown",
         ]);
 
         return $composedContent;
@@ -82,28 +86,30 @@ class PromptService
     /**
      * Get prompts by category
      */
-    public function getPromptsByCategory(string $category): \Illuminate\Database\Eloquent\Collection
-    {
+    public function getPromptsByCategory(
+        string $category,
+    ): \Illuminate\Database\Eloquent\Collection {
         return Prompt::active()
             ->public()
             ->category($category)
-            ->orderBy('title')
+            ->orderBy("title")
             ->get();
     }
 
     /**
      * Search prompts by keyword
      */
-    public function searchPrompts(string $query): \Illuminate\Database\Eloquent\Collection
-    {
+    public function searchPrompts(
+        string $query,
+    ): \Illuminate\Database\Eloquent\Collection {
         return Prompt::active()
             ->public()
             ->where(function ($q) use ($query) {
-                $q->where('title', 'like', "%{$query}%")
-                    ->orWhere('description', 'like', "%{$query}%")
-                    ->orWhere('name', 'like', "%{$query}%");
+                $q->where("title", "like", "%{$query}%")
+                    ->orWhere("description", "like", "%{$query}%")
+                    ->orWhere("name", "like", "%{$query}%");
             })
-            ->orderBy('title')
+            ->orderBy("title")
             ->get();
     }
 
@@ -114,10 +120,10 @@ class PromptService
     {
         return Prompt::active()
             ->public()
-            ->select('category')
+            ->select("category")
             ->distinct()
-            ->orderBy('category')
-            ->pluck('category')
+            ->orderBy("category")
+            ->pluck("category")
             ->toArray();
     }
 
@@ -126,23 +132,23 @@ class PromptService
      */
     public function createManualPrompt(array $data, ?int $userId = null): Prompt
     {
-        $baseName = Str::slug($data['title']);
-        $name = $this->generateUniquePromptName($baseName, 'manual');
+        $baseName = Str::slug($data["title"]);
+        $name = $this->generateUniquePromptName($baseName, "manual");
 
         return Prompt::create([
-            'name' => $name,
-            'title' => $data['title'],
-            'description' => $data['description'] ?? null,
-            'content' => $data['content'],
-            'category' => $data['category'] ?? 'general',
-            'tags' => $data['tags'] ?? [],
-            'source_type' => 'manual',
-            'is_active' => true,
-            'is_public' => $data['is_public'] ?? true,
-            'created_by' => $userId,
-            'metadata' => [
-                'created_via' => 'web_ui',
-                'version' => 1,
+            "name" => $name,
+            "title" => $data["title"],
+            "description" => $data["description"] ?? null,
+            "content" => $data["content"],
+            "category" => $data["category"] ?? "general",
+            "tags" => $data["tags"] ?? [],
+            "source_type" => "manual",
+            "is_active" => true,
+            "is_public" => $data["is_public"] ?? true,
+            "created_by" => $userId,
+            "metadata" => [
+                "created_via" => "web_ui",
+                "version" => 1,
             ],
         ]);
     }
@@ -150,12 +156,18 @@ class PromptService
     /**
      * Generate a unique prompt name for the given source type
      */
-    private function generateUniquePromptName(string $baseName, string $sourceType): string
-    {
+    private function generateUniquePromptName(
+        string $baseName,
+        string $sourceType,
+    ): string {
         $name = $baseName;
         $counter = 0;
 
-        while (Prompt::where('name', $name)->where('source_type', $sourceType)->exists()) {
+        while (
+            Prompt::where("name", $name)
+                ->where("source_type", $sourceType)
+                ->exists()
+        ) {
             $counter++;
             $name = "{$baseName}-{$counter}";
         }
@@ -174,16 +186,18 @@ class PromptService
     /**
      * Process prompt content with user input
      */
-    private function processPromptContent(string $promptContent, string $inputContent): string
-    {
+    private function processPromptContent(
+        string $promptContent,
+        string $inputContent,
+    ): string {
         $processed = str_replace(
-            ['{{INPUT}}', '{INPUT}', '$INPUT'],
+            ["{{INPUT}}", "{INPUT}", '$INPUT', "INPUT:"],
             $inputContent,
-            $promptContent
+            $promptContent,
         );
 
-        if ($processed === $promptContent && ! empty($inputContent)) {
-            $processed = $promptContent."\n\n".$inputContent;
+        if ($processed === $promptContent && !empty($inputContent)) {
+            $processed = $promptContent . "\n\n" . $inputContent;
         }
 
         return $processed;
