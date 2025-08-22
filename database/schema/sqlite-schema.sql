@@ -94,7 +94,8 @@ CREATE TABLE IF NOT EXISTS "prompts"(
   "created_by" integer,
   "metadata" text,
   "created_at" datetime,
-  "updated_at" datetime
+  "updated_at" datetime,
+  "source_identifier" varchar
 );
 CREATE INDEX "prompts_title_index" on "prompts"("title");
 CREATE INDEX "prompts_description_index" on "prompts"("description");
@@ -105,10 +106,6 @@ CREATE INDEX "prompts_source_type_is_active_index" on "prompts"(
 CREATE INDEX "prompts_category_is_active_index" on "prompts"(
   "category",
   "is_active"
-);
-CREATE UNIQUE INDEX "prompts_name_source_type_unique" on "prompts"(
-  "name",
-  "source_type"
 );
 CREATE INDEX "prompts_name_index" on "prompts"("name");
 CREATE INDEX "prompts_category_index" on "prompts"("category");
@@ -170,10 +167,19 @@ CREATE TABLE IF NOT EXISTS "prompt_sources"(
   "updated_at" datetime
 );
 CREATE UNIQUE INDEX "prompt_sources_name_unique" on "prompt_sources"("name");
+CREATE UNIQUE INDEX "prompts_name_source_type_source_identifier_unique" on "prompts"(
+  "name",
+  "source_type",
+  "source_identifier"
+);
+CREATE INDEX "prompts_source_identifier_index" on "prompts"(
+  "source_identifier"
+);
 
-INSERT INTO migrations VALUES(1,'0001_01_01_000000_create_users_table',1);
-INSERT INTO migrations VALUES(2,'0001_01_01_000001_create_cache_table',1);
-INSERT INTO migrations VALUES(3,'0001_01_01_000002_create_jobs_table',1);
-INSERT INTO migrations VALUES(4,'2024_01_01_000001_create_prompts_table',1);
-INSERT INTO migrations VALUES(5,'2025_05_30_192936_create_pattern_executions_table',1);
-INSERT INTO migrations VALUES(6,'2025_06_06_224343_create_prompt_sources_table',2);
+INSERT INTO migrations VALUES(8,'0001_01_01_000000_create_users_table',1);
+INSERT INTO migrations VALUES(9,'0001_01_01_000001_create_cache_table',1);
+INSERT INTO migrations VALUES(10,'0001_01_01_000002_create_jobs_table',1);
+INSERT INTO migrations VALUES(11,'2024_01_01_000001_create_prompts_table',1);
+INSERT INTO migrations VALUES(12,'2025_05_30_192936_create_pattern_executions_table',1);
+INSERT INTO migrations VALUES(13,'2025_06_06_224343_create_prompt_sources_table',1);
+INSERT INTO migrations VALUES(14,'2025_06_06_225723_add_source_identifier_to_prompts_table',1);
