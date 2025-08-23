@@ -45,7 +45,6 @@ class PromptService
                 "auto_sync" => true,
                 "metadata" => [
                     "description" => "Official Fabric AI patterns",
-                    "created_via" => "migration",
                 ],
             ],
         );

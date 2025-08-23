@@ -13,10 +13,7 @@
                 <h1 class="text-3xl font-bold text-gray-900">Prompt Library</h1>
                 <p class="text-gray-600 mt-2">Manage your AI prompts and patterns</p>
             </div>
-            <a href="{{ route('prompts.create') }}"
-               class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                Create Prompt
-            </a>
+
         </div>
 
         @if(session('success'))
@@ -120,10 +117,7 @@
             @empty
                 <div class="col-span-full text-center py-12">
                     <div class="text-gray-400 text-lg mb-4">No prompts found</div>
-                    <a href="{{ route('prompts.create') }}"
-                       class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                        Create Your First Prompt
-                    </a>
+
                 </div>
             @endforelse
         </div>

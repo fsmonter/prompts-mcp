@@ -2,13 +2,8 @@
 
 namespace App\Providers;
 
-use App\Mcp\PromptLibraryToolkit;
-use App\Services\GitSyncService;
-use App\Services\PromptService;
-use Illuminate\Http\Client\Factory as HttpClient;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
-use Kirschbaum\Loop\Facades\Loop;
-use League\CommonMark\CommonMarkConverter;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,20 +12,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(GitSyncService::class, function ($app) {
-            return new GitSyncService(
-                $app->make(HttpClient::class),
-                new CommonMarkConverter
-            );
-        });
-
-        $this->app->singleton(PromptService::class, function ($app) {
-            return new PromptService(
-                $app->make(HttpClient::class),
-                new CommonMarkConverter,
-                $app->make(GitSyncService::class)
-            );
-        });
+        //
     }
 
     /**
@@ -38,10 +20,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Loop::toolkit(
-            new PromptLibraryToolkit(
-                $this->app->make(PromptService::class)
-            )
-        );
+        Vite::prefetch(concurrency: 3);
     }
 }
